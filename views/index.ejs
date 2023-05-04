@@ -4,15 +4,16 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" 
-integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  </head>
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../stylesheets/navbar.css">
+</head>
   <body>
+    <%- include('./partials/navbar.ejs') %>
     <% if (locals.isAuthenticated) { %>
       <p>You are logged in.</p>
     <% } else { %>
       <p>You are not logged in. <a href="/login" class="underline">Login</a>.</p>
     <% } %>
-    <button><a href="/pictures">Your pictures</a></button>
     <% pictures.forEach(function(picture){ %>
       <div class="text-center">
         <img class="mb-3" src="data:image/png; base64, <%=picture.src%>" style="width:500px">
