@@ -16,7 +16,6 @@ router.get('/', requiresAuth(), async function(req, res, next) {
     };
     var allObjects = await s3.listObjects(params).promise();
     var keys = allObjects?.Contents.map( x=> x.Key)
-    console.log('keys'+JSON.stringify(keys))
     // const pictures = fs.readdirSync(path.join(__dirname, '../pictures/'));
     const pictures = await Promise.all(keys.map(async (key) => {
         let my_file = await s3.getObject({
@@ -31,8 +30,18 @@ router.get('/', requiresAuth(), async function(req, res, next) {
     res.render('pictures', { pictures: pictures});
 });
 
-router.get('/:pictureName', function(req, res, next) {
-    res.render('pictureDetails', { picture: req.params.pictureName });
+router.get('/:pictureName', requiresAuth(), async function(req, res, next) {
+    let my_file = await s3.getObject({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: 'public/' + req.params.pictureName,
+    }).promise();
+    const picture = {
+        src: Buffer.from(my_file.Body).toString('base64'),
+        name: req.params.pictureName
+    }
+
+    res.render('pictureDetails', { picture: picture });
+    // res.render('pictureDetails', { picture: req.params.pictureName });
 });
 
 router.post('/', requiresAuth(), async function(req, res, next) {
@@ -41,7 +50,7 @@ router.post('/', requiresAuth(), async function(req, res, next) {
     await s3.putObject({ //await = wait for the putObject() to finish before res.end()
         Body: file.data,
         Bucket: process.env.CYCLIC_BUCKET_NAME,
-        Key: "public/" + file.name, //Saves in the public folder, later we vill save it to each user
+        Key: "public/" + file.name, //Saves in the public folder, later we will save it to each user
     }).promise() // creates a promise that resolves when the putObject() method completes
     res.end();
 });
