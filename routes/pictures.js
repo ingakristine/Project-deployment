@@ -23,7 +23,7 @@ router.get('/', requiresAuth(), async function(req, res, next) {
         }).promise();
         return {
             src: Buffer.from(my_file.Body).toString('base64'), //stores the content of the image. We save it in Base64 format to display it without a URL
-            name: key.split("/").pop()
+            name: req.params.pictureName;
         }
     }))
     res.render('pictures', { pictures: pictures});
@@ -32,7 +32,7 @@ router.get('/', requiresAuth(), async function(req, res, next) {
 router.get('/:pictureName', requiresAuth(), async function(req, res, next) {
     let my_file = await s3.getObject({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
-        Key: 'public/' + req.params.pictureName,
+        Key: req.oidc.user.email + req.params.pictureName,
     }).promise();
     const picture = {
         src: Buffer.from(my_file.Body).toString('base64'),
