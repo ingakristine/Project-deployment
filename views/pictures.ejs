@@ -6,9 +6,12 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="../stylesheets/navbar.css">
     </head<>
-        <body>
-        <%- include('./partials/navbar.ejs') %>
-        <input class="form-control" type="file" id="formFile">
+    <body>
+        <%- include('./partials/navbar.ejs') %> 
+        <div id="fileInputContainer" class="mb-3">
+            <input class="form-control" type="file" id="formFile">
+        </div>
+    
         <div class="mb-3">
             <% pictures.forEach(function(picture){ %>
                 <div class="text-center">
